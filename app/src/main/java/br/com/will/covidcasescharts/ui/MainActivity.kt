@@ -15,6 +15,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var perStateDailyData: Map<String, List<CovidData>>
+    private lateinit var nationalDailyData: List<CovidData>
     private val BASE_URL = "https://api.covidtracking.com/v1/"
     private val TAG = "MainActivity"
 
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val gson = GsonBuilder().create()
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
@@ -36,7 +38,13 @@ class MainActivity : AppCompatActivity() {
                 call: Call<List<CovidData>>,
                 response: Response<List<CovidData>>
             ) {
-
+                val nationalData = response.body()
+                if(nationalData == null){
+                    Log.w(TAG, "Did not receive a valid response body")
+                    return
+                }
+                nationalDailyData = nationalData.reversed()
+                Log.i(TAG,"Update graph with national data")
             }
 
             override fun onFailure(call: Call<List<CovidData>>, t: Throwable) {
@@ -44,7 +52,26 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
         //Fetch the state data
+        covidService.getStatesData().enqueue(object: Callback<List<CovidData>> {
+            override fun onResponse(
+                call: Call<List<CovidData>>,
+                response: Response<List<CovidData>>
+            ) {
+                val statesData = response.body()
+                if (statesData == null) {
+                    Log.w(TAG, "Did not receive a valid response body")
+                    return
+                }
+                perStateDailyData = statesData.reversed().groupBy { it.state }
+                Log.i(TAG, "Update spinner with national data")
+            }
+
+            override fun onFailure(call: Call<List<CovidData>>, t: Throwable) {
+                Log.e(TAG, "onFailure ${t}")
+            }
+        })
 
     }
 }
