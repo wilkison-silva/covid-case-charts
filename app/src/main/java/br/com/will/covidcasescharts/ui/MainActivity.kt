@@ -3,6 +3,7 @@ package br.com.will.covidcasescharts.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.RadioButton
 import android.widget.TextView
 import br.com.will.covidcasescharts.model.CovidData
 import br.com.will.covidcasescharts.service.CovidService
@@ -24,15 +25,19 @@ class MainActivity : AppCompatActivity() {
     private val BASE_URL = "https://api.covidtracking.com/v1/"
     private val TAG = "MainActivity"
 
-    private lateinit var tvMtetricLabel: TextView
+    private lateinit var tvMetricLabel: TextView
     private lateinit var tvDateLabel: TextView
+    private lateinit var radioButtonNegative: RadioButton
+    private lateinit var radioButtonPositive: RadioButton
+    private lateinit var radioButtonDeath: RadioButton
+    private lateinit var radioButtonWeek: RadioButton
+    private lateinit var radioButtonMonth: RadioButton
+    private lateinit var radioButtonMax: RadioButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        tvMtetricLabel = findViewById(R.id.tvMetricLabel)
-        tvMtetricLabel = findViewById(R.id.tvDateLabel)
+        initializeComponents()
 
         val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
         val retrofit = Retrofit.Builder()
@@ -89,14 +94,25 @@ class MainActivity : AppCompatActivity() {
     private fun updateDisplayWithData(dailyData: List<CovidData>) {
         //create a new sparkAdapter with the data
         //update radio buttons to select the positive cases and max time by default
-        
+
         //display metric for the most recent date
         updateInfoForDate(dailyData.last())
     }
 
     private fun updateInfoForDate(covidData: CovidData) {
-        tvMtetricLabel.text = NumberFormat.getInstance().format(covidData.positiveIncrease)
+        tvMetricLabel.text = NumberFormat.getInstance().format(covidData.positiveIncrease)
         val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.US)
         tvDateLabel.text = simpleDateFormat.format(covidData.dateChecked)
+    }
+
+    private fun initializeComponents(){
+        tvMetricLabel = findViewById(R.id.tvMetricLabel)
+        tvDateLabel = findViewById(R.id.tvDateLabel)
+        radioButtonNegative = findViewById(R.id.radioButtonNegative)
+        radioButtonPositive = findViewById(R.id.radioButtonPositive)
+        radioButtonDeath = findViewById(R.id.radioButtonDeath)
+        radioButtonWeek = findViewById(R.id.radioButtonWeek)
+        radioButtonMonth = findViewById(R.id.radioButtonMonth)
+        radioButtonMax = findViewById(R.id.radioButtonMax)
     }
 }
