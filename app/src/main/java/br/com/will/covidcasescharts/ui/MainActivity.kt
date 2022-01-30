@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
 import br.com.will.covidcasescharts.model.CovidData
 import br.com.will.covidcasescharts.service.CovidService
 import com.google.gson.GsonBuilder
+import com.robinhood.spark.SparkView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +35,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var radioButtonWeek: RadioButton
     private lateinit var radioButtonMonth: RadioButton
     private lateinit var radioButtonMax: RadioButton
+    private lateinit var radioGroupMetricSelection: RadioGroup
+    private lateinit var radioGroupTimeSelection: RadioGroup
+    private lateinit var sparkView: SparkView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,8 +99,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateDisplayWithData(dailyData: List<CovidData>) {
         //create a new sparkAdapter with the data
+        val covidSparkAdapter = CovidSparkAdapter(dailyData)
+        sparkView.adapter = covidSparkAdapter
         //update radio buttons to select the positive cases and max time by default
-
+        radioButtonPositive.isChecked = true
+        radioButtonMax.isChecked = true
         //display metric for the most recent date
         updateInfoForDate(dailyData.last())
     }
@@ -114,5 +123,8 @@ class MainActivity : AppCompatActivity() {
         radioButtonWeek = findViewById(R.id.radioButtonWeek)
         radioButtonMonth = findViewById(R.id.radioButtonMonth)
         radioButtonMax = findViewById(R.id.radioButtonMax)
+        radioGroupMetricSelection = findViewById(R.id.radioGroupMetricSelection)
+        radioGroupTimeSelection = findViewById(R.id.radioGroupTimeSelection)
+        sparkView = findViewById(R.id.sparkView)
     }
 }
