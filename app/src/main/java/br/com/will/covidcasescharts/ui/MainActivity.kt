@@ -3,6 +3,7 @@ package br.com.will.covidcasescharts.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import br.com.will.covidcasescharts.model.CovidData
 import br.com.will.covidcasescharts.service.CovidService
 import com.google.gson.GsonBuilder
@@ -11,6 +12,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,9 +24,15 @@ class MainActivity : AppCompatActivity() {
     private val BASE_URL = "https://api.covidtracking.com/v1/"
     private val TAG = "MainActivity"
 
+    private lateinit var tvMtetricLabel: TextView
+    private lateinit var tvDateLabel: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        tvMtetricLabel = findViewById(R.id.tvMetricLabel)
+        tvMtetricLabel = findViewById(R.id.tvDateLabel)
 
         val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
         val retrofit = Retrofit.Builder()
@@ -45,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 nationalDailyData = nationalData.reversed()
                 Log.i(TAG,"Update graph with national data")
+                updateDisplayWithData(nationalDailyData)
             }
 
             override fun onFailure(call: Call<List<CovidData>>, t: Throwable) {
@@ -73,5 +84,19 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+    }
+
+    private fun updateDisplayWithData(dailyData: List<CovidData>) {
+        //create a new sparkAdapter with the data
+        //update radio buttons to select the positive cases and max time by default
+        
+        //display metric for the most recent date
+        updateInfoForDate(dailyData.last())
+    }
+
+    private fun updateInfoForDate(covidData: CovidData) {
+        tvMtetricLabel.text = NumberFormat.getInstance().format(covidData.positiveIncrease)
+        val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.US)
+        tvDateLabel.text = simpleDateFormat.format(covidData.dateChecked)
     }
 }
