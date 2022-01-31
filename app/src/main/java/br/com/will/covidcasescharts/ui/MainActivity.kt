@@ -108,6 +108,27 @@ class MainActivity : AppCompatActivity() {
             }
         }
         //Respond to radio button selected events
+        radioGroupTimeSelection.setOnCheckedChangeListener { radioGroup, checkedId ->
+            covidSparkAdapter.daysAgo = when (checkedId){
+                R.id.radioButtonWeek -> TimeScale.WEEK
+                R.id.radioButtonMonth -> TimeScale.MONTH
+                else -> TimeScale.MAX
+            }
+            covidSparkAdapter.notifyDataSetChanged()
+        }
+
+        radioGroupMetricSelection.setOnCheckedChangeListener { radioGroup, checkedId ->
+            when(checkedId){
+                R.id.radioButtonPositive -> updateDisplayMetric(Metric.POSITIVE)
+                R.id.radioButtonNegative -> updateDisplayMetric(Metric.NEGATIVE)
+                R.id.radioButtonDeath -> updateDisplayMetric(Metric.DEATH)
+            }
+        }
+    }
+
+    private fun updateDisplayMetric(metric: Metric) {
+        covidSparkAdapter.metric = metric
+        covidSparkAdapter.notifyDataSetChanged()
     }
 
     private fun updateDisplayWithData(dailyData: List<CovidData>) {

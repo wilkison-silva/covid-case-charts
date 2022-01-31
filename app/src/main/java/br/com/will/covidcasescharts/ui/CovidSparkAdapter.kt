@@ -1,5 +1,6 @@
 package br.com.will.covidcasescharts.ui
 
+import android.graphics.RectF
 import br.com.will.covidcasescharts.model.CovidData
 import com.robinhood.spark.SparkAdapter
 import java.sql.Time
@@ -22,6 +23,14 @@ class CovidSparkAdapter(
             Metric.POSITIVE -> chosenDayData.positiveIncrease.toFloat()
             Metric.DEATH -> chosenDayData.deathIncrease.toFloat()
         }
+    }
+
+    override fun getDataBounds(): RectF {
+        val bounds = super.getDataBounds()
+        if(daysAgo != TimeScale.MAX){
+            bounds.left = count - daysAgo.numDays.toFloat()
+        }
+        return bounds
     }
 
 }
