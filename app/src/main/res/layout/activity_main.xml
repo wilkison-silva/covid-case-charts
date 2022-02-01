@@ -73,14 +73,20 @@
         app:layout_constraintBottom_toTopOf="@+id/radioGroupTimeSelection"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:background="@color/colorBackgroundShade"
         app:layout_constraintTop_toBottomOf="@+id/radioGroupMetricSelection" />
 
     <RadioGroup
         android:id="@+id/radioGroupTimeSelection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="8dp"
         android:gravity="center"
         android:orientation="horizontal"
+        android:background="@color/colorBackgroundShade"
         app:layout_constraintBottom_toTopOf="@+id/tickerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
