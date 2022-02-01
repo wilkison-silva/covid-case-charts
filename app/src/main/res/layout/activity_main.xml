@@ -45,9 +45,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSelectState">
 
+
+<!--        style="@style/CustomRadioButton"-->
         <RadioButton
             android:id="@+id/radioButtonNegative"
             android:layout_width="wrap_content"
+            style="@style/CustomRadioButton"
             android:layout_height="wrap_content"
             android:text="Negative" />
 
@@ -55,13 +58,15 @@
             android:id="@+id/radioButtonPositive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Positive" />
+            android:text="Positive"
+            style="@style/CustomRadioButton"/>
 
         <RadioButton
             android:id="@+id/radioButtonDeath"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Death"
+            style="@style/CustomRadioButton"
             />
 
     </RadioGroup>
@@ -95,19 +100,22 @@
             android:id="@+id/radioButtonWeek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Week" />
+            android:text="Week"
+            style="@style/CustomRadioButton"/>
 
         <RadioButton
             android:id="@+id/radioButtonMonth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Month" />
+            android:text="Month"
+            style="@style/CustomRadioButton"/>
 
         <RadioButton
             android:id="@+id/radioButtonMax"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Max" />
+            android:text="Max"
+            style="@style/CustomRadioButton"/>
     </RadioGroup>
 
     <TextView
