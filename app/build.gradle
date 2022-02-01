@@ -26,9 +26,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    allprojects {
+        repositories {
+            maven { url "https://jitpack.io" }
+        }
+    }
+
 }
 
 dependencies {
@@ -45,4 +53,5 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.robinhood.spark:spark:1.2.0'
+    implementation 'com.github.arcadefire:nice-spinner:1.4.4'
 }

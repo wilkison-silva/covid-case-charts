@@ -12,6 +12,7 @@ import br.com.will.covidcasescharts.model.CovidData
 import br.com.will.covidcasescharts.service.CovidService
 import com.google.gson.GsonBuilder
 import com.robinhood.spark.SparkView
+import org.angmarch.views.NiceSpinner
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,6 +25,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val ALL_STATES = "All (Nationwide)"
     private lateinit var currentlyShownData: List<CovidData>
     private lateinit var covidSparkAdapter: CovidSparkAdapter
     private lateinit var perStateDailyData: Map<String, List<CovidData>>
@@ -42,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var radioGroupMetricSelection: RadioGroup
     private lateinit var radioGroupTimeSelection: RadioGroup
     private lateinit var sparkView: SparkView
+    private lateinit var spinnerSelect: NiceSpinner
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,13 +95,29 @@ class MainActivity : AppCompatActivity() {
                     return
                 }
                 perStateDailyData = statesData.reversed().groupBy { it.state }
-                Log.i(TAG, "Update spinner with national data")
+                //Update spinner with state names
+                updateSpinnerWithStateData(perStateDailyData.keys)
             }
 
             override fun onFailure(call: Call<List<CovidData>>, t: Throwable) {
                 Log.e(TAG, "onFailure ${t}")
             }
         })
+
+    }
+
+    private fun updateSpinnerWithStateData(stateNames: Set<String>) {
+        val stateAbbreviatonList = stateNames.toMutableList()
+        stateAbbreviatonList.sort()
+        stateAbbreviatonList.add(0, ALL_STATES)
+
+        //Add state list as data source for the spinner
+        spinnerSelect.attachDataSource(stateAbbreviatonList)
+        spinnerSelect.setOnSpinnerItemSelectedListener { parent, view, position, id ->
+            val selectedState = parent.getItemAtPosition(position) as String
+            val selectedData = perStateDailyData[selectedState] ?: nationalDailyData
+            updateDisplayWithData(selectedData)
+        }
 
     }
 
@@ -185,5 +204,6 @@ class MainActivity : AppCompatActivity() {
         radioGroupMetricSelection = findViewById(R.id.radioGroupMetricSelection)
         radioGroupTimeSelection = findViewById(R.id.radioGroupTimeSelection)
         sparkView = findViewById(R.id.sparkView)
+        spinnerSelect = findViewById(R.id.spinnerSelect)
     }
 }
