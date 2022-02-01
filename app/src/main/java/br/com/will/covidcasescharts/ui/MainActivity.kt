@@ -12,6 +12,8 @@ import br.com.will.covidcasescharts.model.CovidData
 import br.com.will.covidcasescharts.service.CovidService
 import com.google.gson.GsonBuilder
 import com.robinhood.spark.SparkView
+import com.robinhood.ticker.TickerUtils
+import com.robinhood.ticker.TickerView
 import org.angmarch.views.NiceSpinner
 import retrofit2.Call
 import retrofit2.Callback
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     private val BASE_URL = "https://api.covidtracking.com/v1/"
     private val TAG = "MainActivity"
 
-    private lateinit var tvMetricLabel: TextView
+    private lateinit var tickerView: TickerView
     private lateinit var tvDateLabel: TextView
     private lateinit var radioButtonNegative: RadioButton
     private lateinit var radioButtonPositive: RadioButton
@@ -122,6 +124,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupEventListeners() {
+
+        tickerView.setCharacterLists(TickerUtils.provideNumberList())
+
         //Add a listener for the user scrubbing on the chart
         sparkView.isScrubEnabled = true
         sparkView.setScrubListener { itemData ->
@@ -159,7 +164,7 @@ class MainActivity : AppCompatActivity() {
 
         @ColorInt val color = ContextCompat.getColor(this, colorResource)
         sparkView.lineColor = color
-        tvMetricLabel.setTextColor(color)
+        tickerView.setTextColor(color)
 
         //Update the metric on the adapter
         covidSparkAdapter.metric = metric
@@ -187,13 +192,13 @@ class MainActivity : AppCompatActivity() {
             Metric.POSITIVE -> covidData.positiveIncrease
             Metric.DEATH -> covidData.deathIncrease
         }
-        tvMetricLabel.text = NumberFormat.getInstance().format(numCases)
+        tickerView.text = NumberFormat.getInstance().format(numCases)
         val simpleDateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.US)
         tvDateLabel.text = simpleDateFormat.format(covidData.dateChecked)
     }
 
     private fun initializeComponents(){
-        tvMetricLabel = findViewById(R.id.tvMetricLabel)
+        tickerView = findViewById(R.id.tickerView)
         tvDateLabel = findViewById(R.id.tvDateLabel)
         radioButtonNegative = findViewById(R.id.radioButtonNegative)
         radioButtonPositive = findViewById(R.id.radioButtonPositive)
@@ -205,5 +210,7 @@ class MainActivity : AppCompatActivity() {
         radioGroupTimeSelection = findViewById(R.id.radioGroupTimeSelection)
         sparkView = findViewById(R.id.sparkView)
         spinnerSelect = findViewById(R.id.spinnerSelect)
+
+
     }
 }
